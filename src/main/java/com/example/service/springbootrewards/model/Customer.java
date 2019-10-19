@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Entity
 public class Customer {
@@ -16,6 +19,9 @@ public class Customer {
 	private String name;
 	@OneToMany(mappedBy="customer", cascade = CascadeType.ALL)
 	private Set<MyTransaction> transactions;
+	@JsonInclude
+	@Transient
+	private Long rewardPoints;
 	
 	public Customer() {
 		super();
@@ -42,6 +48,11 @@ public class Customer {
 	}
 	public void setTransactions(Set<MyTransaction> transactions) {
 		this.transactions = transactions;
+	}
+	public Long getRewardPoints() {
+		if (transactions == null || transactions.isEmpty()) return 0l;
+		
+		return transactions.stream().map(x -> x.getPoints().intValue()).reduce(0, (a,b) -> a + b).longValue();
 	}
 	
 }
