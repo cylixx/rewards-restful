@@ -3,6 +3,7 @@ package com.example.service.springbootrewards.rewards;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,9 +29,16 @@ public class RewardsController {
 //		return rewardsService.getAll();
 //	}
 	
-	@GetMapping("/customer/{id}")
-	public Customer getCustomer(@PathVariable Integer id) {
-		return rewardsService.getCustomerById(id);
+	@GetMapping("/customers")
+	public List<Customer> findCustomerAll() {
+		return rewardsService.getCustomerAll();
+	}
+	
+	@GetMapping("/customers/{id}")
+	public ResponseEntity<Customer> getCustomer(@PathVariable Integer id) {
+		Customer customer = rewardsService.getCustomerById(id);
+		if (customer == null) return new ResponseEntity<Customer>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Customer>(customer, HttpStatus.OK);
 	}
 	
 	

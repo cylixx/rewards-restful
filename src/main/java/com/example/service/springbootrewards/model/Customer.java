@@ -4,6 +4,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -17,11 +18,14 @@ public class Customer {
 	@GeneratedValue
 	private Integer id;
 	private String name;
-	@OneToMany(mappedBy="customer", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<MyTransaction> transactions;
 	@JsonInclude
 	@Transient
 	private Long rewardPoints;
+	@JsonInclude
+	@Transient
+	private Double totalPurchases;
 	
 	public Customer() {
 		super();
@@ -54,5 +58,11 @@ public class Customer {
 		
 		return transactions.stream().map(x -> x.getPoints().intValue()).reduce(0, (a,b) -> a + b).longValue();
 	}
+	public Double getTotalPurchases() {
+		if (transactions == null || transactions.isEmpty()) return 0d;
+		
+		return transactions.stream().map(x -> x.getTotal().doubleValue()).reduce(0d, (a,b) -> a + b).doubleValue();
+	}
+	
 	
 }

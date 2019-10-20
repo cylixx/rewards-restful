@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.example.service.springbootrewards.model.Customer;
 
 @Repository
-public interface RewardsRepository extends JpaRepository<Customer, Integer>{
+public interface CustomerRepository extends JpaRepository<Customer, Integer>{
 
 }
